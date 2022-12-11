@@ -3,7 +3,7 @@ class Random {
     #minimum;
     #maximum;
 
-    constructor(minimum, maximum) {
+    constructor(minimum=-1, maximum=-1) {
 	    this.#minimum = minimum;
 	    this.#maximum = maximum;
 	}
@@ -22,10 +22,10 @@ class Random {
 	}
 
     get number() {
-	    return Math.random() * (this.#maximum - this.#minimum + 1) + this.#minimum;
+		return Math.random() * (this.#maximum - this.#minimum + 1) + this.#minimum;
 	}
     get integer() {
-	    return Math.floor(this.number);
+		return Math.floor(this.number);
 	}
 	get zeroOrOne() {
 	    return Math.round(Math.random());
