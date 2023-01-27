@@ -29,11 +29,21 @@ The functions implemented by the wrapper class allow the user to generate either
 
 ## Setup
 
+Setting up the project involves first importing, in the case of using the class in a browser-based project, or requiring it, in the case of a node-based project. Then, we create a Random object by instantiating the class with values that specify the minimum and maximum integers within which the random numbers will be generated.
+```
+const random = new Random(0, 9);
+```
+Here, we have created a Random object with a minimum set to 0 and a maximum set to 9.
+
 ## Usage
 
 ## Project Status
 
+This project is completed as long as nothing else can be found to be included in the project to improve the original intention of the project. So, until another sort of random generation can be found, nothing else will be added to the project.
+
 ## Room for Improvement
+
+There is room for improvement in that the class structures available in javascript work fine for the project currently entails. However, rewriting the project for typescript can only improve the project as the class structures available there are improved over those available in JavaScript.
 
 ## Contact
 Feel free to contact me @micrjamesjr on twitter or on github @micrjames
