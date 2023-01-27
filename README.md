@@ -37,6 +37,28 @@ Here, we have created a Random object with a minimum set to 0 and a maximum set 
 
 ## Usage
 
+Once a Random object is instantiated, we can generate a random value between the minimum and maximum integers that we specified above. In the examples below, the code yields either a number or an integer between these values.
+
+```
+let randNum = random.number;
+console.log(`A random number from ${random.minimum} to ${random.maximum}: ${randNum}.`);
+
+let randInt = random.integer;
+console.log(`A random integer from ${random.minimum} to ${random.maximum}: ${randInt}.`);
+```
+Additionally, we can get a randomly generated zero or one; as in the code show below, we get just that.
+
+```
+const zeroOrOne = random.zeroOrOne;
+console.log(`A random instance of either the numbers zero or one: ${zeroOrOne}.`);
+```
+Furthermore, given a an array, we can be given a random element of that array yielded through the code below.
+
+```
+let nums = [2, 4];
+const randChoice = random.choice(nums);
+```
+
 ## Project Status
 
 This project is completed as long as nothing else can be found to be included in the project to improve the original intention of the project. So, until another sort of random generation can be found, nothing else will be added to the project.
