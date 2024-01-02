@@ -1,31 +1,28 @@
-const { Random } = require("./Random");
+const { Random } = require("../Random");
 
-const random = new Random(0, 9);
-
-let randNum = random.number;
-console.log(`A random number from ${random.minimum} to ${random.maximum}: ${randNum}.`);
-
-let randInt = random.integer;
-console.log(`A random integer from ${random.minimum} to ${random.maximum}: ${randInt}.`);
-
-const zeroOrOne = random.zeroOrOne;
-console.log(`A random instance of either the numbers zero or one: ${zeroOrOne}.`);
-
-let nums = [2, 4];
-const randChoice = random.choice(nums);
-
-console.log(`A random element of ${nums}: ${randChoice}.`);
-console.log(`minimum: ${random.minimum} and maximum: ${random.maximum}`);
-
-nums = [2, 4, 6];
-console.log(`A random element of ${nums}: ${randChoice}.`);
-console.log(`minimum: ${random.minimum} and maximum: ${random.maximum}`);
-
-random.minimum = 0;
-random.maximum = 9;
-
-randNum = random.number;
-console.log(`A random number from ${random.minimum} to ${random.maximum}: ${randNum}.`);
-
-randInt = random.integer;
-console.log(`A random integer from ${random.minimum} to ${random.maximum}: ${randInt}.`);
+describe("Random Number Generator", () => {
+   const random = new Random(0, 9);
+   const minimum: number = random.min;
+   const maximum: number = random.max;
+   test(`A random number from ${minimum} to ${maximum}.`, () => { 
+	  const randNum: number = random.number;
+	  expect(randNum).toBeGreaterThanOrEqual(minimum);
+	  expect(randNum).toBeLessThanOrEqual(maximum);
+   });
+   test(`A random integer from ${minimum} to ${maximum}.`, () => {
+	  const randInt: number = random.integer;
+	  expect(randInt).toBeGreaterThanOrEqual(minimum);
+	  expect(randInt).toBeLessThanOrEqual(maximum);
+   });
+   test("A random value of either zero or one.", () => {
+	  const zeroOrOneArr: number[] = [0, 1];
+	  const zeroOrOne: number = random.zeroOrOne;
+	  // expect(OneOf(zeroOrOneArr, zeroOrOne)).toBeTruthy();
+	  expect(zeroOrOneArr).toContain(zeroOrOne);
+   });
+   test("An entry of an array at a random index.", () => {
+	  const numsArr: number[] = [2, 4, 6];
+	  const randChoice: number = random.choice(numsArr);
+      expect(numsArr).toContain(randChoice);
+   });
+});
