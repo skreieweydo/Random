@@ -41,10 +41,16 @@ describe("Random Number Generator", () => {
 	  const randArr = Random.populate(3);
 	  expect(randArr).toHaveLength(3);
    });
-   test("An array populated by randomly generated numbers.", () => {
+   test("An array populated by randomly generated numbers from 0 to 100.", () => {
 	  const randArr = Random.populate(3);
 	  randArr.forEach(num => {
-		 expect(num.toString()).toMatch(/\d+/);
+		 expect(num.toString()).toMatch(/^0$|^[1-9][0-9]?$|^100/);
+	  });
+   });
+   test("An array populated by randomly generated between 0 and 50.", () => {
+	  const randArr = Random.populate(3, 1, 50);
+	  randArr.forEach(num => {
+		 expect(num.toString()).toMatch(/^[1-4][0-9]?$|^50/);
 	  });
    });
 });

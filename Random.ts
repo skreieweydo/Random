@@ -36,9 +36,9 @@ class Random {
 		
 	    return nums[this.integer];
 	}
-	static populate(n: number): number[] {
+	static populate(n: number, start: number = 0, end: number = 100): number[] {
 	   return Array.from({length: n}, _ => {
-		  const randNum = new Random(0, 100);
+		  const randNum = new Random(start, end);
 		  return randNum.integer;
 	   });
 	}
