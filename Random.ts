@@ -36,6 +36,12 @@ class Random {
 		
 	    return nums[this.integer];
 	}
+	static populate(n: number): number[] {
+	   return Array.from({length: n}, _ => {
+		  const randNum = new Random(0, 100);
+		  return randNum.integer;
+	   });
+	}
 }
 
 exports.Random = Random;

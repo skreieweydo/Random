@@ -5,8 +5,12 @@ describe("Random Number Generator", () => {
    const maximum: number = 9;
    const random = new Random(minimum, maximum);
 
-   test.todo("The minimum possible generated random number.")
-   test.todo("The maximum possible generated random number.")
+   test("The minimum possible generated random number.", () => {
+	  expect(random.min).toBe(minimum);
+   });
+   test("The maximum possible generated random number.", () => {
+	  expect(random.max).toBe(maximum);
+   });
    test(`A random number greater than ${random.min}.`, () => { 
 	  const randNum: number = random.number;
 	  expect(randNum).toBeGreaterThanOrEqual(random.min);
@@ -33,5 +37,14 @@ describe("Random Number Generator", () => {
 	  const randChoice: number = random.choice(numsArr);
       expect(numsArr).toContain(randChoice);
    });
-   test.todo("An array populated by randomly generated numbers.");
+   test("An array populated by randomly generated numbers of given length.", () => {
+	  const randArr = Random.populate(3);
+	  expect(randArr).toHaveLength(3);
+   });
+   test("An array populated by randomly generated numbers.", () => {
+	  const randArr = Random.populate(3);
+	  randArr.forEach(num => {
+		 expect(num.toString()).toMatch(/\d+/);
+	  });
+   });
 });
