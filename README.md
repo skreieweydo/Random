@@ -68,4 +68,4 @@ This project is completed as long as nothing else can be found to be included in
 There is room for improvement in that the class structures available in javascript work fine for the project currently entails. However, rewriting the project for typescript can only improve the project as the class structures available there are improved over those available in JavaScript.
 
 ## Contact
-Feel free to contact me @micrjamesjr on twitter or on github @micrjames
+Feel free to contact me @michaelrjamesjr on twitter.
