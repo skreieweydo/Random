@@ -52,13 +52,17 @@ Additionally, we can get a randomly generated zero or one; as in the code show b
 const zeroOrOne = random.zeroOrOne;
 console.log(`A random instance of either the numbers zero or one: ${zeroOrOne}.`);
 ```
-Furthermore, given a an array, we can be given a random element of that array yielded through the code below.
+Furthermore, given an array, we can be given a random element of that array yielded through the code below.
 
 ```
 let nums = [2, 4];
 const randChoice = random.choice(nums);
 ```
-
+There's one more method available, a static method, populate. Create an array populated by *n* numbers from *start* to *end*. The parameters *start* and *end* are set default to 0 and 100, respectively.
+```
+const populatedArray = Random.populate(5, 0, 100);
+```
+The above code will create a 5 member array, *populatedArray*, with each member between 0 and 100.
 ## Project Status
 
 This project is completed as long as nothing else can be found to be included in the project to improve the original intention of the project. So, until another sort of random generation can be found, nothing else will be added to the project.
