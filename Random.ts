@@ -36,10 +36,11 @@ class Random {
 		
 	    return nums[this.integer];
 	}
-	static populate(n: number, start: number = 0, end: number = 100): number[] {
+	static populate(n: number, start: number = 0, end: number = 100, frac: boolean = false): number[] {
 	   return Array.from({length: n}, _ => {
-		  const randNum = new Random(start, end);
-		  return randNum.integer;
+		  let randNum = new Random(start, end).integer;
+		  if(frac) return randNum /= end;
+		  return randNum;
 	   });
 	}
 }

@@ -43,14 +43,20 @@ describe("Random Number Generator", () => {
    });
    test("An array populated by randomly generated numbers from 0 to 100.", () => {
 	  const randArr = Random.populate(3);
-	  randArr.forEach(num => {
+	  randArr.forEach((num: number) => {
 		 expect(num.toString()).toMatch(/^0$|^[1-9][0-9]?$|^100/);
 	  });
    });
-   test("An array populated by randomly generated between 0 and 50.", () => {
+   test("An array populated by randomly generated numbers between 0 and 50.", () => {
 	  const randArr = Random.populate(3, 1, 50);
-	  randArr.forEach(num => {
+	  randArr.forEach((num: number)  => {
 		 expect(num.toString()).toMatch(/^[1-4][0-9]?$|^50/);
+	  });
+   });
+   test("An array populated by randomly generated fractional numbers between -1 and 1.", () => {
+	  const randArrFrac = Random.populate(3, -100, 100, true);
+	  randArrFrac.forEach((num: number) => {
+		 expect(num.toString()).toMatch(/^(-?[0]([.][0-9]+)?)$|^-?1?$/);
 	  });
    });
 });
