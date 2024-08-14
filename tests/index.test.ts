@@ -1,4 +1,4 @@
-const { Random } = require("../Random");
+import { Random } from "../Random";
 
 describe("Random Number Generator", () => {
    const minimum: number = 0;
