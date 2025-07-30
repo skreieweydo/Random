@@ -5,13 +5,14 @@ export class Random {
 
 	// Math.random():m [0, 1)
 	// default: (0, 1)
-    constructor(minimum:number = 0, maximum: number = 1) {
+    constructor(minimum: number = 0, maximum: number = 1) {
 		if (minimum > maximum) {
             throw new Error("Minimum cannot be greater than maximum.");
         }
 	    this.minimum = minimum;
 	    this.maximum = maximum;
 	}
+
     // Accessors for min and max with validation
     set min(value: number) {
         if (value > this.maximum) {
