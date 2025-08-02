@@ -1,11 +1,15 @@
+import { validateNumber } from "./utils";
+
 export class Random {
     // "number" and "integer" functions returns are inclusive of max and min
     private minimum: number;
     private maximum: number;
 
-	// Math.random():m [0, 1)
+	// Math.random(): [0, 1)
 	// default: (0, 1)
     constructor(minimum: number = 0, maximum: number = 1) {
+		validateNumber("Minimum", minimum);
+		validateNumber("Maximum", maximum);
 		if (minimum > maximum) {
             throw new Error("Minimum cannot be greater than maximum.");
         }
@@ -15,6 +19,7 @@ export class Random {
 
     // Accessors for min and max with validation
     set min(value: number) {
+		validateNumber("Minimum", value);
         if (value > this.maximum) {
             throw new Error("Minimum cannot be greater than maximum.");
         }
@@ -24,6 +29,7 @@ export class Random {
 	    return this.minimum;
 	}
 	set max(value: number) {
+		validateNumber("Maximum", value);
 		if (value < this.minimum) {
             throw new Error("Maximum cannot be less than minimum.");
         }
