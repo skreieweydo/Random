@@ -29,18 +29,22 @@ describe("Utils", () => {
 			beforeEach(() => {
 				errorStr = "Test must be a valid number.";
 			});
-			test.each([
-				["NaN", NaN],
-				["Infinity", Infinity],
-				["-Infinity", -Infinity],
-				["non-number type", "string" as unknown as number],
-				["undefined", undefined as any],
-				["null", null as any],
-				["boolean", true as any],
-				["object", {} as any],
-				["array", [1, 2] as any],
-				["function", (() => 3) as any]
-			] as const)(
+
+			const invalidNumberMap = {
+				NaN: NaN,
+				Infinity: Infinity,
+				"-Infinity": -Infinity,
+				"non-number type": "string" as unknown as number,
+				undefined: undefined as any,
+				null: null as any,
+				boolean: true as any,
+				object: {} as any,
+				array: [1, 2] as any,
+				function: (() => 3) as any
+			} as const;
+			type InvalidNumberEntry =  { [K in keyof typeof invalidNumberMap]: [K, typeof invalidNumberMap[K]] }[keyof typeof invalidNumberMap];
+			const invalidEntries: InvalidNumberEntry[] = Object.entries(invalidNumberMap) as InvalidNumberEntry[];
+			test.each(invalidEntries)(
 			"%s: should throw",
 			(_desc, v) => {
 				valObj.value = v;
