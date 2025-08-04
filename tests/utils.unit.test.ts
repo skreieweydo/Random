@@ -12,90 +12,40 @@ describe("Utils", () => {
 	});
 	describe("validateNumber", () => {
 		describe("Valid inputs (should not throw)", () => {   
-			test("Accepts a positive integer.", () => {
-				valObj.value = 123;
+			test.each([
+				["positive integer", 123],
+				["negative float", -4.56],
+				["zero", 0]
+			] as const)(
+			"%s: should not throw",
+			(_desc, v) => {
+				valObj.value = v;
 				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).not.toThrow();
-			});
-			test("Accepts a negative float.", () => {
-				valObj.value = -4.56;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).not.toThrow();
-			});
-			test("Accepts zero.", () => {
-				valObj.value = 0;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).not.toThrow();
+				expect(() => validateNumber(label, value)).not.toThrow();
 			});
 		});
 		describe("Invalid inputs (should throw)", () => {
 			let errorStr: string;
 			beforeEach(() => {
-				errorStr = "";
 				errorStr = "Test must be a valid number.";
 			});
-			test("Throws on NaN.", () => {
-				valObj.value = NaN;
+			test.each([
+				["NaN", NaN],
+				["Infinity", Infinity],
+				["-Infinity", -Infinity],
+				["non-number type", "string" as unknown as number],
+				["undefined", undefined as any],
+				["null", null as any],
+				["boolean", true as any],
+				["object", {} as any],
+				["array", [1, 2] as any],
+				["function", (() => 3) as any]
+			] as const)(
+			"%s: should throw",
+			(_desc, v) => {
+				valObj.value = v;
 				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on Infinity.", () => {
-				valObj.value = Infinity;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on -Infinity.", () => {
-				valObj.value = -Infinity;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on non-number type.", () => {
-				valObj.value = "string" as unknown as number;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on undefined.", () => {
-				valObj.value = undefined as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on null.", () => {
-				valObj.value = null as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on boolean.", () => {
-				valObj.value = true as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on object.", () => {
-				valObj.value = {} as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on array.", () => {
-				valObj.value = [1, 2] as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws on function.", () => {
-				valObj.value = (() => 3) as any;
-				const { label, value } = valObj;
-				errR = () => validateNumber(label, value);
-				expect(errR).toThrow(errorStr);
+				expect(() => validateNumber(label, value)).toThrow(errorStr);
 			});
 		});
 	});
