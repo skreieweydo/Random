@@ -122,19 +122,131 @@ describe("Utils", () => {
 		});
 	});
 	describe("range()", () => {
-		describe("Standard ranges (should return correct arrays)", () => {
-			test.todo("generates correct range with step 1");
-			test.todo("generates correct range with custom step");
-			test.todo("handles non-integer span lengths");
-			test.todo("generates empty array if start ≥ stop");
+		let genRange: number[];
+		type RangeParams = {
+			start: number;
+			end: number;
+			step: number;
+		};
+	    let	rangeParams: RangeParams;
+		beforeEach(() => {
+			genRange = [];
+			rangeParams = {
+				start: 0,
+				end: 0,
+				step: 0
+			};
 		});
+		describe("Standard ranges (should return correct arrays).", () => {
+			test("Generates correct range with step 1.", () => {
+				rangeParams = {
+					start: 0,
+					end: 5,
+					step: 1
+				};
+				const expectedRange = [0, 1, 2, 3, 4];
+				const { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Generates correct range with custom step.", () => {
+				rangeParams = {
+					start: 2,
+					end: 9,
+					step: 2
+				};
+				const expectedRange = [2, 4, 6, 8];
+				const { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Handles non-integer span lengths.", () => {
+				rangeParams = {
+					start: 0,
+					end: 5,
+					step: 2
+				};
+				const expectedRange = [0, 2, 4];
+				const { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Generates empty array if start ≥ stop.", () => {
+				rangeParams = {
+					start: 5,
+					end: 5,
+					step: 1
+				};
+				const expectedRange = [];
+				let { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+				expect(range(5, 5, 1)).toEqual([]);
 
+				rangeParams = {
+					start: 10,
+					end: 5,
+					step: 2
+				};
+				({ start, end, step } = rangeParams);
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+		});
 		describe("Edge & advanced ranges (should handle edge cases)", () => {
-			test.todo("generates correct range for negative start");
-			test.todo("generates correct range with fractional step");
-			test.todo("generates single-element array if step > span");
-			test.todo("generates decreasing range with negative step");
-			test.todo("throws when step is zero");
+			test("Generates correct range for negative start.", () => {
+				rangeParams = {
+					start: -3,
+					end: 2,
+					step: 1
+				};
+				const expectedRange = [-3, -2, -1, 0, 1];
+				let { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Generates correct range with fractional step.", () => {
+				rangeParams = {
+					start: 0.5,
+					end: 2,
+					step: 0.5 
+				};
+				const expectedRange = [0.5, 1.0, 1.5];
+				let { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Generates single-element array if step > span.", () => {
+				rangeParams = {
+					start: 0,
+					end: 2,
+					step: 5 
+				};
+				const expectedRange = [0];
+				let { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Generates decreasing range with negative step.", () => {
+				rangeParams = {
+					start: 5,
+					end: 0,
+					step: -1 
+				};
+				const expectedRange = [5, 4, 3, 2, 1];
+				let { start, end, step } = rangeParams;
+				genRange = range(start, end, step);
+				expect(genRange).toEqual(expectedRange);
+			});
+			test("Throws when step is zero.", () => {
+				rangeParams = {
+					start: 0,
+					end: 5,
+					step: 0
+				};
+				let { start, end, step } = rangeParams;
+				expect(() => range(step, end, step)).toThrow();
+			});
 		});
 	});
 });
