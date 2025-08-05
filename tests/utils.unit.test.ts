@@ -88,16 +88,61 @@ describe("Utils", () => {
 		});
 	});
 	describe("seqℕ()", () => {
-		describe("Standard behavior", () => {
-			test.todo("generates sequence including zero by default");
-			test.todo("generates sequence excluding zero when includeZero is false");
-			test.todo("generates empty sequence if n is 0");
-			test.todo("generates single-element sequence when n is 1");
+		let genSeq: number[];
+		let expectedSeq: number[];
+		beforeEach(() => {
+			genSeq = [];
+			expectedSeq = [];
 		});
+		describe("Standard behavior", () => {
+			test("Generates sequence including zero by default.", () => {
+				genSeq = seqℕ(5);
+				expectedSeq = [0, 1, 2, 3, 4];
+				expect(genSeq).toEqual(expectedSeq);
+			});
+			test("Generates sequence excluding zero when includeZero is false.", () => {
+				genSeq = seqℕ(5, false);
+				expectedSeq = [1, 2, 3, 4, 5];
+				expect(genSeq).toEqual(expectedSeq);
+			});
+			test("Generates empty sequence if n is 0.", () => {
+				genSeq = seqℕ(0);
+				expectedSeq = [];
+				expect(genSeq).toEqual(expectedSeq);
 
+				genSeq = seqℕ(0, false);
+				expect(genSeq).toEqual(expectedSeq);
+			});
+			test("Generates single-element sequence when n is 1.", () => {
+				genSeq = seqℕ(1);
+				expectedSeq = [0];
+				expect(genSeq).toEqual(expectedSeq);
+
+				genSeq = seqℕ(1, false);
+				expectedSeq = [1];
+				expect(genSeq).toEqual(expectedSeq);
+			});
+		});
 		describe("Edge & coercion cases", () => {
-			test.todo("treats negative n as zero (empty sequence)");
-			test.todo("floors fractional n to integer length");
+			test("Treats negative n as zero (empty sequence).", () => {
+				genSeq = seqℕ(-3);
+				expectedSeq = [];
+				expect(genSeq).toEqual(expectedSeq);
+
+				genSeq = seqℕ(-3, false);
+				expectedSeq = [];
+				expect(genSeq).toEqual(expectedSeq);
+			});
+			test("Floors fractional n to integer length.", () => {
+				// e.g. 3.7 → floor(3.7) = 3
+				genSeq = seqℕ(3.7);
+				expectedSeq = [0, 1, 2];
+				expect(genSeq).toEqual(expectedSeq);
+
+				genSeq = seqℕ(3.7, false);
+				expectedSeq = [1, 2, 3];
+				expect(genSeq).toEqual(expectedSeq);
+			});
 		});
 	});
 	describe("range()", () => {
