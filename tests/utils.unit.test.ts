@@ -89,58 +89,34 @@ describe("Utils", () => {
 	});
 	describe("seqℕ()", () => {
 		let genSeq: number[];
-		let expectedSeq: number[];
 		beforeEach(() => {
 			genSeq = [];
-			expectedSeq = [];
 		});
 		describe("Standard behavior", () => {
-			test("Generates sequence including zero by default.", () => {
-				genSeq = seqℕ(5);
-				expectedSeq = [0, 1, 2, 3, 4];
-				expect(genSeq).toEqual(expectedSeq);
-			});
-			test("Generates sequence excluding zero when includeZero is false.", () => {
-				genSeq = seqℕ(5, false);
-				expectedSeq = [1, 2, 3, 4, 5];
-				expect(genSeq).toEqual(expectedSeq);
-			});
-			test("Generates empty sequence if n is 0.", () => {
-				genSeq = seqℕ(0);
-				expectedSeq = [];
-				expect(genSeq).toEqual(expectedSeq);
-
-				genSeq = seqℕ(0, false);
-				expect(genSeq).toEqual(expectedSeq);
-			});
-			test("Generates single-element sequence when n is 1.", () => {
-				genSeq = seqℕ(1);
-				expectedSeq = [0];
-				expect(genSeq).toEqual(expectedSeq);
-
-				genSeq = seqℕ(1, false);
-				expectedSeq = [1];
+			test.each([
+				["including zero by default", 5, true, [0, 1, 2, 3, 4]],
+				["excluding zero when includeZero is false", 5, false, [1, 2, 3, 4, 5]],
+				["empty if n is 0 when includeZero is true", 0, true, []],
+				["empty if n is 0 when includeZero is false", 0, false, []],
+				["single-element when n is 1 and includeZero is true", 1, true, [0]],
+				["single-element when n is 1 and includeZero is false", 1, false, [1]],
+			] as const)(
+			"Generates sequence: %s.",
+			(_desc, n, includingZero, expectedSeq) => {
+				genSeq = seqℕ(n, includingZero);
 				expect(genSeq).toEqual(expectedSeq);
 			});
 		});
 		describe("Edge & coercion cases", () => {
-			test("Treats negative n as zero (empty sequence).", () => {
-				genSeq = seqℕ(-3);
-				expectedSeq = [];
-				expect(genSeq).toEqual(expectedSeq);
-
-				genSeq = seqℕ(-3, false);
-				expectedSeq = [];
-				expect(genSeq).toEqual(expectedSeq);
-			});
-			test("Floors fractional n to integer length.", () => {
-				// e.g. 3.7 → floor(3.7) = 3
-				genSeq = seqℕ(3.7);
-				expectedSeq = [0, 1, 2];
-				expect(genSeq).toEqual(expectedSeq);
-
-				genSeq = seqℕ(3.7, false);
-				expectedSeq = [1, 2, 3];
+			test.each([
+				["Treats negative n as zero (empty sequence) when includingZero is true.", -3, true, []],
+				["Treats negative n as zero (empty sequence) when includingZero is false.", -3, false, []],
+				["Floors fractional n to integer length when includingZero is true.", 3.7, true, [0, 1, 2]],
+				["Floors fractional n to integer length when includingZero is true.", 3.7, false, [1, 2, 3]],
+			] as const)(
+			"Generates sequence: %s.",
+			(_desc, n, includingZero, expectedSeq) => {
+				genSeq = seqℕ(n, includingZero);
 				expect(genSeq).toEqual(expectedSeq);
 			});
 		});
