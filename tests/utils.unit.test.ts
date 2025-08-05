@@ -54,20 +54,53 @@ describe("Utils", () => {
 		});
 	});
 	describe("isFloat()", () => {
-		describe("Valid floats (should return true)", () => {
-			test.todo("returns true for non-integer finite number");
-			test.todo("returns true for negative non-integer finite number");
-			test.todo("returns true for very small nonzero float (MIN_VALUE)");
+		let isNumFloat: boolean;
+		beforeEach(() => {
+			isNumFloat = false;
 		});
-
+		describe("Valid floats (should return true)", () => {
+			test("Returns true for non-integer finite number.", () => {
+				isNumFloat = isFloat(3.14);
+				expect(isNumFloat).toBeTruthy();
+			});
+			test("Returns true for negative non-integer finite number.", () => {
+				isNumFloat = isFloat(-2.718);
+				expect(isNumFloat).toBeTruthy();
+			});
+			test("Returns true for very small nonzero float (MIN_VALUE).", () => {
+				isNumFloat = isFloat(Number.MIN_VALUE);
+				expect(isNumFloat).toBeTruthy();
+			});
+		});
 		describe("Non-float numbers (should return false)", () => {
-			test.todo("returns false for integer");
-			test.todo("returns false for integer-valued float (5.0)");
-			test.todo("returns false for zero");
-			test.todo("returns false for negative zero");
-			test.todo("returns false for NaN");
-			test.todo("returns false for +Infinity");
-			test.todo("returns false for -Infinity");
+			test("Returns false for integer.", () => {
+				isNumFloat = isFloat(7);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for integer-valued float (5.0).", () => {
+				isNumFloat = isFloat(5.0);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for zero.", () => {
+				isNumFloat = isFloat(0);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for negative zero.", () => {
+				isNumFloat = isFloat(-0);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for NaN.", () => {
+				isNumFloat = isFloat(NaN);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for +Infinity.", () => {
+				isNumFloat = isFloat(Infinity);
+				expect(isNumFloat).toBeFalsy();
+			});
+			test("Returns false for -Infinity.", () => {
+				isNumFloat = isFloat(-Infinity);
+				expect(isNumFloat).toBeFalsy();
+			});
 		});
 	});
 	describe("seqℕ()", () => {
