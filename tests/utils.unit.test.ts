@@ -138,114 +138,35 @@ describe("Utils", () => {
 			};
 		});
 		describe("Standard ranges (should return correct arrays).", () => {
-			test("Generates correct range with step 1.", () => {
-				rangeParams = {
-					start: 0,
-					end: 5,
-					step: 1
-				};
-				const expectedRange = [0, 1, 2, 3, 4];
-				const { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Generates correct range with custom step.", () => {
-				rangeParams = {
-					start: 2,
-					end: 9,
-					step: 2
-				};
-				const expectedRange = [2, 4, 6, 8];
-				const { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Handles non-integer span lengths.", () => {
-				rangeParams = {
-					start: 0,
-					end: 5,
-					step: 2
-				};
-				const expectedRange = [0, 2, 4];
-				const { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Generates empty array if start ≥ stop.", () => {
-				rangeParams = {
-					start: 5,
-					end: 5,
-					step: 1
-				};
-				const expectedRange = [];
-				let { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-				expect(range(5, 5, 1)).toEqual([]);
-
-				rangeParams = {
-					start: 10,
-					end: 5,
-					step: 2
-				};
-				({ start, end, step } = rangeParams);
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
+			test.each([
+				["with step 1", { start: 0, end: 5, step: 1 }, [0, 1, 2, 3, 4]],
+				["custom step 2", { start: 2, end: 9, step: 2 }, [2, 4, 6, 8]],
+				["with non-integer span", { start: 0, end: 5, step: 2 }, [0, 2, 4]],
+				["empty when start = stop", { start: 5, end: 5, step: 1 }, []],
+				["empty when start > stop", { start: 10, end: 5, step: 2 }, []],
+			] as const)(
+			"Generates range: %s.",
+			(_desc, params, expected) => {
+				const { start, end, step } = params;
+				expect(range(start, end, step)).toEqual(expected);
 			});
 		});
 		describe("Edge & advanced ranges (should handle edge cases)", () => {
-			test("Generates correct range for negative start.", () => {
-				rangeParams = {
-					start: -3,
-					end: 2,
-					step: 1
-				};
-				const expectedRange = [-3, -2, -1, 0, 1];
-				let { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Generates correct range with fractional step.", () => {
-				rangeParams = {
-					start: 0.5,
-					end: 2,
-					step: 0.5 
-				};
-				const expectedRange = [0.5, 1.0, 1.5];
-				let { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Generates single-element array if step > span.", () => {
-				rangeParams = {
-					start: 0,
-					end: 2,
-					step: 5 
-				};
-				const expectedRange = [0];
-				let { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
-			});
-			test("Generates decreasing range with negative step.", () => {
-				rangeParams = {
-					start: 5,
-					end: 0,
-					step: -1 
-				};
-				const expectedRange = [5, 4, 3, 2, 1];
-				let { start, end, step } = rangeParams;
-				genRange = range(start, end, step);
-				expect(genRange).toEqual(expectedRange);
+			test.each([
+				["for negative start", { start: -3, end: 2, step: 1 }, [-3, -2, -1, 0, 1]],
+				["with fractional step", { start: 0.5, end: 2, step: 0.5 }, [0.5, 1.0, 1.5]],
+				["single-element if step > span", { start: 0, end: 2, step: 5 }, [0]],
+				["decreasing with negative step", { start: 5, end: 0, step: -1 }, [5, 4, 3, 2, 1]],
+			] as const)(
+			"Generates range: %s.",
+			(_desc, params, expected) => {
+				const { start, end, step } = params;
+				expect(range(start, end, step)).toEqual(expected);
 			});
 			test("Throws when step is zero.", () => {
-				rangeParams = {
-					start: 0,
-					end: 5,
-					step: 0
-				};
+				rangeParams = { start: 0, end: 5, step: 0 };
 				let { start, end, step } = rangeParams;
-				expect(() => range(step, end, step)).toThrow();
+				expect(() => range(start, end, step)).toThrow();
 			});
 		});
 	});
