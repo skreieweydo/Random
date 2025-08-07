@@ -1,75 +1,132 @@
 # Random
-A wrapper class that implements JavaScript Math.random() function, which provides approximately uniform distribution over the range of numbers between 0 to 1. As specified in the algorithm, no seed can be chosen or reset by the user; it is set initially by the algorithm. The wrapper class helps the user perform various scalings and manipulations on the number generated.
 
-## Table Of Contents
-* [General Info](#general-info)
-* [Technologies Used](#technologies-used)
-* [Features](#features)
-* [Setup](#setup)
-* [Usage](#usage)
-* [Project Status](#project-status)
-* [Room for Improvement](#room-for-improvement)
-* [Contact](#contact)
+> A lightweight TypeScript/JavaScript library for flexible, validated random number generation.
 
-## General Info
+[![npm version](https://img.shields.io/npm/v/@your-org/random)](https://www.npmjs.com/package/@your-org/random)  
+[![Build Status](https://img.shields.io/github/actions/workflow/status/your-org/random/ci.yml)](https://github.com/your-org/random/actions)  
+[![License: MIT](https://img.shields.io/npm/l/@your-org/random)](LICENSE)
 
-This project was developed to generate Random numbers under the given conditions that are not available in JavaScript by default. Need was found to repeatedly write and rewrite many of these functions to do work with various projects, so in order to follow the principles of encapsulation and writing code as DRYly as possible, the Random class was found to be clearly necessary.
+---
 
-## Technologies Used
+## 📖 Table of Contents
 
-This project is built using es6 class structures, defining a private, as well as JavaScript can do so, range of values within which the numbers can be randomly generated.
+- [Introduction](#introduction)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [API](#api)  
+- [Testing](#testing)  
+- [Roadmap](#roadmap)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-## Features
+---
 
-The functions implemented by the wrapper class allow the user to generate either a random numbers between specified values.
-* The specified values are two integers specified by the user.
-* The user can generate a uniformly distributed number between those specified values.
-* The user can generate a uniformly distributed integer betweem those specified values.
-* The user can choose a random element of a given array.
+## 💡 Introduction
 
-## Setup
+The Random library is a thin wrapper over JavaScript’s built-in `Math.random()`, providing:
 
-Setting up the project involves first importing, in the case of using the class in a browser-based project, or requiring it, in the case of a node-based project. Then, we create a Random object by instantiating the class with values that specify the minimum and maximum integers within which the random numbers will be generated.
+- Configurable integer and floating-point ranges  
+- Seed-agnostic, reusable RNG instance  
+- Utility methods like `choice()` and `populate()`  
+- Centralized input validation to catch invalid ranges
+
+It helps you write DRY, encapsulated code when you need randomized values in your apps.
+
+---
+
+## 🚀 Installation
+
+```bash
+npm install @your-org/random
+# or
+yarn add @your-org/random
+````
+
+---
+
+## 🎯 Usage
+
+```ts
+import { Random } from "@your-org/random";
+
+// Create a generator between 0 and 9
+const rng = new Random(0, 9);
+
+// Floating-point in [0, 9)
+console.log(rng.randomNumber());
+
+// Integer in [0, 9]
+console.log(rng.randomInteger());
+
+// Random boolean as 0 or 1
+console.log(rng.zeroOrOne());
+
+// Pick a random element
+console.log(rng.choice([2, 4, 6]));
+
+// Populate an array of 5 integers in [0, 100] (default)
+console.log(Random.populate(5));
+
+// Populate an array of 5 floats in [10, 20]
+console.log(Random.populate(5, 10, 20, true));
 ```
-const random = new Random(0, 9);
+
+---
+
+## 🧩 API
+
+### `new Random(min?: number, max?: number)`
+
+* **min**: *number* — inclusive lower bound (default: `0`)
+* **max**: *number* — inclusive upper bound for integers, exclusive for floats (default: `1`)
+
+#### Instance Methods
+
+| Method                | Signature                                                                    | Description                                                                                   |
+| --------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `randomNumber()`      | `() => number`                                                               | Uniform float in `[min, max)`                                                                 |
+| `randomInteger()`     | `() => number`                                                               | Uniform integer in `[min, max]`                                                               |
+| `zeroOrOne()`         | `() => 0 \| 1`                                                               | Random choice of `0` or `1`                                                                   |
+| `choice<T>(arr: T[])` | `(arr: T[]) => T`                                                            | Random element from an array                                                                  |
+| `static populate()`   | `(n: number, start?: number, end?: number, frac?: boolean) => number[]`<br/> | Generates an array of length `n` with random values in `[start, end]`, floats if `frac=true`. |
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run the tests
+npm test
+
+# View coverage report
+npm run coverage
 ```
-Here, we have created a Random object with a minimum set to 0 and a maximum set to 9.
 
-## Usage
+---
 
-Once a Random object is instantiated, we can generate a random value between the minimum and maximum integers that we specified above. In the examples below, the code yields either a number or an integer between these values.
+## 🗺️ Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) for future phases, including seedable PRNG, distributions, CSPRNG support, and more.
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'feat: add something'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+Please read our [CONTRIBUTING.md](./CONTRIBUTING.md) and [CODE\_OF\_CONDUCT.md](./CODE_OF_CONDUCT.md) first.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
 
 ```
-let randNum = random.number;
-console.log(`A random number from ${random.minimum} to ${random.maximum}: ${randNum}.`);
 
-let randInt = random.integer;
-console.log(`A random integer from ${random.minimum} to ${random.maximum}: ${randInt}.`);
+Feel free to adjust package names, badges URLs, or sections (e.g., add CLI usage or a “Contact” section) as needed.
 ```
-Additionally, we can get a randomly generated zero or one; as in the code show below, we get just that.
-
-```
-const zeroOrOne = random.zeroOrOne;
-console.log(`A random instance of either the numbers zero or one: ${zeroOrOne}.`);
-```
-Furthermore, given an array, we can be given a random element of that array yielded through the code below.
-
-```
-let nums = [2, 4];
-const randChoice = random.choice(nums);
-```
-There's one more method available, a static method, populate. Create an array populated by *n* numbers from *start* to *end*. The parameters *start* and *end* are set default to 0 and 100, respectively.
-```
-const populatedArray = Random.populate(5, 0, 100);
-```
-The above code will create a 5 member array, *populatedArray*, with each member between 0 and 100.
-## Project Status
-
-This project is completed as long as nothing else can be found to be included in the project to improve the original intention of the project. So, until another sort of random generation can be found, nothing else will be added to the project.
-
-## Room for Improvement
-
-There is room for improvement in that the class structures available in javascript work fine for the project currently entails. However, rewriting the project for typescript can only improve the project as the class structures available there are improved over those available in JavaScript.
-
-## Contact
-Feel free to contact me @michaelrjamesjr on twitter.

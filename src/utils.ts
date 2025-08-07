@@ -3,7 +3,22 @@ const isFloat = (n: number): boolean => Number.isFinite(n) && !Number.isInteger(
 type seqℕOptions = {
 	includeZero?: boolean;
 };
-const seqℕ = (n: number, includeZero: boolean = true): number[] => Array.from({ length: n }, (_, i) => includeZero ? i : i + 1);
+const seqℕ = (n: number, options: seqℕOptions = {}): number[] => {
+	const { includeZero = true } = options;
+	// Validate that n is a real finite number
+	if (typeof n !== 'number' || Number.isNaN(n) || !Number.isFinite(n)) {
+		throw new TypeError(`seqℕ: 'n' must be a finite number. Received: ${n}.`);
+	}
+
+	// Floor and clamp to zero
+	const length = Math.floor(n);
+	const count  = length > 0 ? length : 0;
+
+	// Build the sequence
+	return Array.from({ length: count }, (_, i) =>
+	  includeZero ? i : i + 1
+	);
+};
 
 // [start, end)
 const range = (start: number, stop: number, step: number) =>

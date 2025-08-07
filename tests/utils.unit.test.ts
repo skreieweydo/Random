@@ -103,7 +103,7 @@ describe("Utils", () => {
 			] as const)(
 			"Generates sequence: %s.",
 			(_desc, n, includingZero, expectedSeq) => {
-				genSeq = seqℕ(n, includingZero);
+				genSeq = seqℕ(n, { includeZero: includingZero });
 				expect(genSeq).toEqual(expectedSeq);
 			});
 		});
@@ -116,10 +116,26 @@ describe("Utils", () => {
 			] as const)(
 			"Generates sequence: %s.",
 			(_desc, n, includingZero, expectedSeq) => {
-				genSeq = seqℕ(n, includingZero);
+				genSeq = seqℕ(n, {includeZero: includingZero });
 				expect(genSeq).toEqual(expectedSeq);
 			});
 		});
+		describe("invalid inputs", () => {
+		  test.each([
+			["NaN",      NaN],
+			["Infinity", Infinity],
+			["-Infinity", -Infinity],
+			["not a number", "foo" as any],
+		  ] as const)(
+			"%s → throws",
+			(_desc, badN) => {
+			  expect(() => seqℕ(badN)).toThrow(
+				`seqℕ: 'n' must be a finite number. Received: ${badN}.`
+			  );
+			}
+		  );
+		});
+
 	});
 	describe("range()", () => {
 		let genRange: number[];
