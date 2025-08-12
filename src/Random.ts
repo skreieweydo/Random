@@ -32,6 +32,12 @@ export class Random {
     constructor(minimum: number = 0, maximum: number = 1) {
 		validateNumber("Minimum", minimum);
 		validateNumber("Maximum", maximum);
+		if (typeof minimum !== "number" || typeof maximum !== "number") {
+			throw new TypeError("Minimum and maximum must be numbers.");
+		}
+		if (!Number.isFinite(minimum) || !Number.isFinite(maximum)) {
+			throw new TypeError("Minimum and maximum must be finite numbers.");
+		}
 		if (minimum > maximum) {
             throw new Error("Minimum cannot be greater than maximum.");
         }

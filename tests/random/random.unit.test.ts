@@ -95,6 +95,13 @@ describe("Random Number Generator", () => {
 				expect(r.max).toBe(Number.MAX_SAFE_INTEGER);
 			});
 		});
+		describe("Runtime Type Safety for Constructor", () => {
+			test.todo("Throws if minimum is not a number.");
+			test.todo("Throws if maximum is not a number.");
+			test.todo("Throws if minimum is NaN.");
+			test.todo("Throws if maximum is Infinity.");
+			test.todo("Throws if minimum is -Infinity.");
+		});
 	});
 
 	describe("Min/Max Configuration via Setters", () => {
@@ -128,6 +135,14 @@ describe("Random Number Generator", () => {
 			errR = () => { random.max = NaN; };
 			expect(errR).toThrow(errorStr);
 		});
+	});
+	describe("Runtime Type Safety for Setters", () => {
+		test.todo("Throws if min is a string");
+		test.todo("Throws if max is a string");
+		test.todo("Throws if min is Infinity");
+		test.todo("Throws if max is -Infinity");
+		test.todo("Throws if min > max");
+		test.todo("Throws if max < min");
 	});
 
 	describe("Random Value Generation", () => {
