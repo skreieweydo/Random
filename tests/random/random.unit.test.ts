@@ -1,5 +1,5 @@
-import { Random } from "../src/Random";
-import { isFloat, seqℕ, range } from "../src/utils";
+import { Random } from "../../src/Random";
+import { isFloat, seqℕ, range } from "../../src/utils";
 
 describe("Random Number Generator", () => {
 	let random: Random;
@@ -161,6 +161,8 @@ describe("Random Number Generator", () => {
 			val = random.zeroOrOne();
 			expect(zeroAndOne).toContain(val);
 		});
+		test.todo("randomInteger returns min when min == max.");
+		test.todo("randomInteger over narrow range returns consistent value.");
 	});
 
 	describe("Random Selection from Arrays", () => {
@@ -174,6 +176,9 @@ describe("Random Number Generator", () => {
 			errR = () => random.choice([]);
 			expect(errR).toThrow(errorStr);
 		});
+		test.todo("choice() works with one-element array.");
+		test.todo("choice() works with negative values.");
+		test.todo("choice() works with floats.");
 	});
 
 	describe("Static Method: populate()", () => {
@@ -218,5 +223,7 @@ describe("Random Number Generator", () => {
 			errR = () => Random.populate(0);
 			expect(errR).toThrow(errorStr);
 		});
+		test.todo("populate(1) returns single-element array.");
+		test.todo("Throws if frac = true and end = 0 (division by zero).");
 	});
 });

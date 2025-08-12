@@ -1,5 +1,18 @@
 import { validateNumber } from "./utils";
 
+/**
+ * A lightweight wrapper around `Math.random()` that provides
+ * convenience methods for common random operations over a numeric range.
+ *
+ * - Uses half-open intervals for floating-point draws: `[min, max)`
+ * - Validates inputs (finite numbers; `min <= max`)
+ * - Non-deterministic APIs are exposed as **methods** (not getters)
+ *
+ * @example
+ * const rng = new Random(0, 10);
+ * const x = rng.randomNumber();   // 0 ≤ x < 10
+ * const i = rng.randomInteger();  // 0 ≤ i < 10 (integer)
+ */
 export class Random {
     // "number" and "integer" functions returns are inclusive of max and min
     private minimum: number;
@@ -7,6 +20,15 @@ export class Random {
 
 	// Math.random(): [0, 1)
 	// default: (0, 1)
+	/**
+	 * Constructs a `Random` instance with the given inclusive lower bound and
+	 * exclusive upper bound semantics for floating draws.
+	 *
+	 * @param minimum - Lower bound for the range (default `0`).
+	 * @param maximum - Upper bound for the range (default `1`).
+	 * @throws {Error} If either bound is not a finite number.
+	 * @throws {Error} If `minimum > maximum`.
+     */
     constructor(minimum: number = 0, maximum: number = 1) {
 		validateNumber("Minimum", minimum);
 		validateNumber("Maximum", maximum);
@@ -18,6 +40,10 @@ export class Random {
 	}
 
     // Accessors for min and max with validation
+	/**
+	  * Updates the minimum bound.
+	  * @throws {Error} If the value is not a finite number or `value > max`.
+	  */
     set min(value: number) {
 		validateNumber("Minimum", value);
         if (value > this.maximum) {
@@ -25,9 +51,16 @@ export class Random {
         }
 	    this.minimum = value;
 	}
+    /**
+	  * Current minimum bound of the generator.
+	  */
     get min(): number {
 	    return this.minimum;
 	}
+	/**
+      * Updates the maximum bound.
+      * @throws {Error} If the value is not a finite number or `value < min`.
+      */
 	set max(value: number) {
 		validateNumber("Maximum", value);
 		if (value < this.minimum) {
@@ -35,22 +68,49 @@ export class Random {
         }
         this.maximum = value;
 	}
+    /**
+	  * Current maximum bound of the generator.
+	  */
     get max(): number {
 	    return this.maximum;
 	}
 	// The number and integer methods are designed to return values inclusive of the maximum and minimum. However, the way the random number is generated can lead to confusion. The Math.random() function generates a number in the range [0, 1), so the formula should be adjusted to ensure inclusivity.
 	
 	// Methods (not accessors) for random generation
+	/**
+      * Returns a uniformly distributed floating-point number in the half-open
+      * interval `[min, max)`.
+      *
+      * @returns A float `x` such that `min ≤ x < max`.
+      */
     randomNumber(): number {
 		return Math.random() * (this.maximum - this.minimum) + this.minimum;
 	}
+    /**
+      * Returns a uniformly distributed integer in the half-open interval
+      * `[min, max)` (i.e., `min` inclusive, `max` exclusive).
+      *
+      * @returns An integer `k` such that `min ≤ k < max`.
+      */
     randomInteger(): number {
 		return Math.floor(this.randomNumber());
 	}
+    /**
+      * Returns either `0` or `1` with approximately equal probability.
+      *
+      * @returns `0` or `1`.
+      */
 	zeroOrOne(): number {
 	    return Math.round(Math.random());
 	}
 	// modifies the state of the Random instance by changing minimum and maximum. This could lead to unintended side effects if the same instance is reused. Consider creating a new instance or resetting the state after the choice is made.
+	/**
+      * Returns a random element from a non-empty array.
+      *
+      * @param nums - The array to choose from.
+      * @returns One element of `nums`, chosen uniformly at random.
+      * @throws {Error} If `nums` is empty.
+      */
     choice(nums: number[]): number {
         if (nums.length === 0) {
             throw new Error("Array cannot be empty.");
@@ -59,6 +119,20 @@ export class Random {
         return nums[indexGen.randomInteger()];
 	}
 	// creates a new Random instance for each random number generated. This is inefficient. Instead, consider creating a single instance and reusing it.
+	/**
+      * Generates an array of length `n` filled with random values drawn from
+      * the specified range.
+      *
+      * - When `frac === false` (default): integers in `[start, end)` (upper exclusive).
+      * - When `frac === true`: scaled floats in `[0, 1)` via `integer / end`.
+      *
+      * @param n - Number of elements to produce (must be positive).
+      * @param start - Lower bound for the generator (default `0`).
+      * @param end - Upper bound for the generator (default `100`).
+      * @param frac - When `true`, returns normalized floats in `[0, 1)`; otherwise integers.
+      * @returns An array of random values of length `n`.
+      * @throws {Error} If `n <= 0`.
+      */
 	static populate(n: number, start: number = 0, end: number = 100, frac: boolean = false): number[] {
 		if (n <= 0) {
             throw new Error("Count must be a positive number.");
