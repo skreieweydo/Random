@@ -1,132 +1,179 @@
-# Random
+# Random (TypeScript / JavaScript)
 
-> A lightweight TypeScript/JavaScript library for flexible, validated random number generation.
+> A lightweight, validated wrapper around `Math.random()` with a clean API for bounded floats/ints, coin flips, array selection, and bulk generation.
 
-[![npm version](https://img.shields.io/npm/v/@your-org/random)](https://www.npmjs.com/package/@your-org/random)  
-[![Build Status](https://img.shields.io/github/actions/workflow/status/your-org/random/ci.yml)](https://github.com/your-org/random/actions)  
-[![License: MIT](https://img.shields.io/npm/l/@your-org/random)](LICENSE)
-
----
-
-## 📖 Table of Contents
-
-- [Introduction](#introduction)  
-- [Installation](#installation)  
-- [Usage](#usage)  
-- [API](#api)  
-- [Testing](#testing)  
-- [Roadmap](#roadmap)  
-- [Contributing](#contributing)  
-- [License](#license)  
+[![Build Status](https://img.shields.io/github/actions/workflow/status/skr eieweydo/Random/ci.yml?branch=main)](https://github.com/skr eieweydo/Random/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## 💡 Introduction
-
-The Random library is a thin wrapper over JavaScript’s built-in `Math.random()`, providing:
-
-- Configurable integer and floating-point ranges  
-- Seed-agnostic, reusable RNG instance  
-- Utility methods like `choice()` and `populate()`  
-- Centralized input validation to catch invalid ranges
-
-It helps you write DRY, encapsulated code when you need randomized values in your apps.
+## Table of Contents
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [API](#api)
+  - [class Random](#class-random)
+  - [Utilities](#utilities)
+- [Error Handling](#error-handling)
+- [Testing](#testing)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🚀 Installation
+## Introduction
+
+JavaScript’s `Math.random()` is seedless and returns a float in `[0, 1)`. This library wraps it with a small, well-typed class and a few utilities so you can easily:
+- generate bounded **floats** and **integers**,
+- flip a bit (`0 | 1`),
+- pick a random element from an array, and
+- **populate** arrays efficiently.
+
+Runtime validation guards catch invalid inputs early.
+
+---
+
+## Installation
+
+Until this is published to npm, install directly from GitHub:
 
 ```bash
-npm install @your-org/random
-# or
-yarn add @your-org/random
+# HTTPS
+npm i git+https://github.com/skreieweydo/Random.git
+
+# or SSH
+npm i git+ssh://git@github.com/skreieweydo/Random.git
 ````
 
+> After publishing to npm, this becomes something like:
+>
+> ```bash
+> npm i @skreieweydo/random
+> ```
+>
+> (Update this section when published.)
+
 ---
 
-## 🎯 Usage
+## Quick Start
 
 ```ts
-import { Random } from "@your-org/random";
+// If consumed directly from the repo:
+import { Random } from "./src/Random";
 
-// Create a generator between 0 and 9
-const rng = new Random(0, 9);
+// …or once published to npm:
+// import { Random } from "@skreieweydo/random";
 
-// Floating-point in [0, 9)
-console.log(rng.randomNumber());
+const rng = new Random(0, 10);
 
-// Integer in [0, 9]
-console.log(rng.randomInteger());
+const f = rng.randomNumber();   // float in [0, 10)
+const i = rng.randomInteger();  // integer in [0, 10)  (degenerate case min===max yields that exact value)
+const b = rng.zeroOrOne();      // 0 or 1
 
-// Random boolean as 0 or 1
-console.log(rng.zeroOrOne());
+const chosen = rng.choice([2, 4, 6, 8]);
 
-// Pick a random element
-console.log(rng.choice([2, 4, 6]));
-
-// Populate an array of 5 integers in [0, 100] (default)
-console.log(Random.populate(5));
-
-// Populate an array of 5 floats in [10, 20]
-console.log(Random.populate(5, 10, 20, true));
+// Bulk generation
+const ints  = Random.populate(5, 1, 6);         // e.g., [1,2,3,2,5]
+const fracs = Random.populate(5, 0, 100, true); // floats ~ [0, 1)
 ```
 
 ---
 
-## 🧩 API
+## API
 
-### `new Random(min?: number, max?: number)`
+### `class Random`
 
-* **min**: *number* — inclusive lower bound (default: `0`)
-* **max**: *number* — inclusive upper bound for integers, exclusive for floats (default: `1`)
+```ts
+new Random(minimum = 0, maximum = 1)
+```
 
-#### Instance Methods
+* Validates **types**, **finiteness**, and **ordering** at construction.
+* Throws:
 
-| Method                | Signature                                                                    | Description                                                                                   |
-| --------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `randomNumber()`      | `() => number`                                                               | Uniform float in `[min, max)`                                                                 |
-| `randomInteger()`     | `() => number`                                                               | Uniform integer in `[min, max]`                                                               |
-| `zeroOrOne()`         | `() => 0 \| 1`                                                               | Random choice of `0` or `1`                                                                   |
-| `choice<T>(arr: T[])` | `(arr: T[]) => T`                                                            | Random element from an array                                                                  |
-| `static populate()`   | `(n: number, start?: number, end?: number, frac?: boolean) => number[]`<br/> | Generates an array of length `n` with random values in `[start, end]`, floats if `frac=true`. |
+  * `TypeError("Minimum and maximum must be numbers.")`
+  * `TypeError("Minimum and maximum must be finite numbers.")`
+  * `Error("Minimum cannot be greater than maximum.")`
+
+#### Instance methods
+
+| Method              | Signature                                       | Description                                                                                                                        |
+| ------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `randomNumber()`    | `() => number`                                  | Uniform float in **\[min, max)**.                                                                                                  |
+| `randomInteger()`   | `() => number`                                  | Uniform integer in **\[min, max)**. If `min === max`, returns that exact value.                                                    |
+| `zeroOrOne()`       | `() => 0 \| 1`                                  | Random bit.                                                                                                                        |
+| `choice`         | `(arr: number[]) => number`                               | Returns random element. Throws if the array is empty.                                                                              |
+| `static populate()` | `(n, start=0, end=100, frac=false) => number[]` | Array of length `n`. Integers in **\[start, end)** by default; when `frac=true`, returns `integer / end` (≈ `[0,1)` if `start=0`). |
 
 ---
 
-## 🧪 Testing
+## Error Handling
+
+* **Constructor / Setters (`min`, `max`):**
+
+  * `TypeError` if values are not numbers or not finite.
+  * `Error` if ordering is invalid (`min > max` / `max < min`).
+* **`choice([])`** → `Error("Array cannot be empty.")`
+* **`populate(n <= 0)`** → `Error("Count must be a positive number.")`
+* **`populate(frac=true, end=0)`** → `Error("Division by zero error or invalid range.")`
+
+---
+
+## Utilities
+
+If you export these from `src/utils.ts`, the library includes:
+
+* `validateNumber(name: string, value: number): void`
+  Throws if not a finite number.
+
+* `isFloat(n: number): boolean`
+  `true` for finite non-integers.
+
+* `seqℕ(n: number, options?: { includeZero?: boolean }): number[]`
+  Generates a length-`n` sequence starting at 0 (or 1 when `includeZero=false`).
+
+* `range(...)`
+  Python-like numeric range with overloads:
+
+  * `range(stop)`
+  * `range(start, stop)`
+  * `range(start, stop, step)`
+    Validates types/finiteness, disallows `step=0`, and returns `[]` on direction mismatch.
+
+See inline JSDoc for exact signatures and behavior.
+
+---
+
+## Testing
 
 ```bash
-# Run the tests
 npm test
-
-# View coverage report
-npm run coverage
 ```
 
----
-
-## 🗺️ Roadmap
-
-See [ROADMAP.md](./ROADMAP.md) for future phases, including seedable PRNG, distributions, CSPRNG support, and more.
+* Uses Jest with TypeScript/Babel transform.
+* High coverage across `Random` and utilities (thresholds configurable in `jest.config.js`).
 
 ---
 
-## 🤝 Contributing
+## Roadmap
+
+* **Phase 2:** Seeded PRNG interface (deterministic mode).
+* **Phase 3:** Distributions (normal, exponential, etc.).
+* **Phase 4:** CSPRNG option (Node/browser).
+* **Phase 5:** Publish to npm + CI badges + typed examples.
+
+---
+
+## Contributing
 
 1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'feat: add something'`)
-4. Push to the branch (`git push origin feature/your-feature`)
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Commit: `git commit -m "feat: add X"`
+4. Push: `git push origin feat/your-feature`
 5. Open a Pull Request
-
-Please read our [CONTRIBUTING.md](./CONTRIBUTING.md) and [CODE\_OF\_CONDUCT.md](./CODE_OF_CONDUCT.md) first.
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
-
-```
-
-Feel free to adjust package names, badges URLs, or sections (e.g., add CLI usage or a “Contact” section) as needed.
-```
+MIT — see [LICENSE](./LICENSE).
