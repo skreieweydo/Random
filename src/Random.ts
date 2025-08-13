@@ -30,14 +30,14 @@ export class Random {
 	 * @throws {Error} If `minimum > maximum`.
      */
     constructor(minimum: number = 0, maximum: number = 1) {
-		validateNumber("Minimum", minimum);
-		validateNumber("Maximum", maximum);
 		if (typeof minimum !== "number" || typeof maximum !== "number") {
 			throw new TypeError("Minimum and maximum must be numbers.");
 		}
 		if (!Number.isFinite(minimum) || !Number.isFinite(maximum)) {
 			throw new TypeError("Minimum and maximum must be finite numbers.");
 		}
+		validateNumber("Minimum", minimum);
+		validateNumber("Maximum", maximum);
 		if (minimum > maximum) {
             throw new Error("Minimum cannot be greater than maximum.");
         }
@@ -126,23 +126,37 @@ export class Random {
 	}
 	// creates a new Random instance for each random number generated. This is inefficient. Instead, consider creating a single instance and reusing it.
 	/**
-      * Generates an array of length `n` filled with random values drawn from
-      * the specified range.
-      *
-      * - When `frac === false` (default): integers in `[start, end)` (upper exclusive).
-      * - When `frac === true`: scaled floats in `[0, 1)` via `integer / end`.
-      *
-      * @param n - Number of elements to produce (must be positive).
-      * @param start - Lower bound for the generator (default `0`).
-      * @param end - Upper bound for the generator (default `100`).
-      * @param frac - When `true`, returns normalized floats in `[0, 1)`; otherwise integers.
-      * @returns An array of random values of length `n`.
-      * @throws {Error} If `n <= 0`.
-      */
+	* Generates an array of length `n` filled with random values drawn from the given range.
+	*
+	* Behavior:
+	* - When `frac === false` (default): returns integers in `[start, end)` (upper exclusive),
+	*   i.e., possible values are `start, start+1, ..., end-1`.
+	* - When `frac === true`: returns scaled values by computing `integer / end`.
+	*   If `start === 0` this yields values in `[0, 1)`. If `start !== 0`, the range is
+	*   `[start/end, (end-1)/end]`.
+	*
+	* @param n      Number of elements to produce (must be > 0).
+	* @param start  Lower bound for the integer generator (default `0`).
+	* @param end    Upper bound for the integer generator (default `100`).
+	* @param frac   When `true`, returns normalized floats as described above; otherwise integers.
+	* @returns      An array of random values of length `n`.
+	*
+	* @throws {Error}    If `n <= 0`.
+	* @throws {Error}    If `frac === true` and `end === 0` (division by zero).
+	* @throws {Error}    If `start > end` (propagated from the underlying `Random` validation).
+	* @throws {TypeError} If `start` or `end` are not finite numbers (propagated from `Random`).
+	*
+	* @remarks
+	* - Time complexity: O(n).
+	* - If you require `[0, 1)` in fractional mode, ensure `start === 0` and `end > 0`.
+	*/
 	static populate(n: number, start: number = 0, end: number = 100, frac: boolean = false): number[] {
 		if (n <= 0) {
             throw new Error("Count must be a positive number.");
         }
+		if (frac && end === 0) {
+			throw new Error("Division by zero error or invalid range.");
+		}
 	    const generator = new Random(start, end);
 	    return Array.from({length: n}, _ => {
 		   const randNum = generator.randomInteger();

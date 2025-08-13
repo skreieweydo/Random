@@ -44,63 +44,77 @@ describe("Random Number Generator", () => {
 			});
 		});
 		describe("Constructor: Invalid Parameter Types or Values", () => {
-			test("Throws if minimum is a string (invalid type).", () => {
-				errorStr = "Minimum must be a valid number.";
-				errR = () => new Random("5" as unknown as number, 10);
-				expect(errR).toThrow(errorStr);
+			let errorNumStr: string;
+			let errorFinStr: string;
+			beforeAll(() => {
+				errorNumStr = "Minimum and maximum must be numbers.";
+				errorFinStr = "Minimum and maximum must be finite numbers.";
 			});
-			test("Throws if minimum is NaN.", () => {
-				errorStr = "Minimum must be a valid number.";
-				errR = () => new Random(NaN, 10);
-				expect(errR).toThrow(errorStr);
+			describe("Invalid type - minimum", () => {
+				test("Throws if minimum is a string (invalid type).", () => {
+					errorStr = errorNumStr;
+					errR = () => new Random("5" as unknown as number, 10);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws error if minimum is null.", () => {
+					errorStr = errorNumStr;
+					errR = () => new Random(null as unknown as number, 10);
+					expect(errR).toThrow(errorStr);
+				});
 			});
-			test("Throws error if minimum is null.", () => {
-				errorStr = "Minimum must be a valid number.";
-				errR = () => new Random(null as unknown as number, 10);
-				expect(errR).toThrow(errorStr);
+			describe("Invalid type - maximum", () => {
+				test("Throws error if maximum is a string (invalid type).", () => {
+					errorStr = errorNumStr;
+					errR = () => new Random(0, "10" as unknown as number);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws if maximum is null.", () => {
+					errorStr = errorNumStr;
+					errR = () => new Random(0, null as unknown as number);
+					expect(errR).toThrow(errorStr);
+				});
 			});
-			test("Throws if minimum is -Infinity.", () => {
-				errorStr = "Minimum must be a valid number.";
-				errR = () => new Random(-Infinity, 1);
-				expect(errR).toThrow(errorStr);
+			describe("Non-finite — minimum", () => {
+				test("Throws if minimum is NaN.", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(NaN, 10);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws if minimum is -Infinity.", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(-Infinity, 1);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws if minimum is Infinity.", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(Infinity, 1);
+					expect(errR).toThrow(errorStr);
+				});
 			});
-			test("Throws error if maximum is a string (invalid type).", () => {
-				errorStr = "Maximum must be a valid number.";
-				errR = () => new Random(0, "10" as unknown as number);
-				expect(errR).toThrow(errorStr);
+			describe("Non-finite — maximum", () => {
+				test("Throws if maximum is NaN.", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(5, NaN);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws error if maximum is -Infinity.", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(undefined, -Infinity);
+					expect(errR).toThrow(errorStr);
+				});
+				test("Throws error if maximum is Infinity", () => {
+					errorStr = errorFinStr;
+					errR = () => new Random(0, Infinity);
+					expect(errR).toThrow(errorStr);
+				});
 			});
-			test("Throws if maximum is NaN.", () => {
-				errorStr = "Maximum must be a valid number.";
-				errR = () => new Random(5, NaN);
-				expect(errR).toThrow(errorStr);
+			describe("Extremes accepted", () => {
+				test("Accepts Number.MIN_SAFE_INTEGER and MAX_SAFE_INTEGER.", () => {
+					const r = new Random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+					expect(r.min).toBe(Number.MIN_SAFE_INTEGER);
+					expect(r.max).toBe(Number.MAX_SAFE_INTEGER);
+				});
 			});
-			test("Throws if maximum is null.", () => {
-				errorStr = "Maximum must be a valid number.";
-				errR = () => new Random(0, null as unknown as number);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws error if maximum is Infinity.", () => {
-				errorStr = "Maximum must be a valid number.";
-				errR = () => new Random(undefined, Infinity);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Throws error if maximum is Infinity", () => {
-				errorStr = "Maximum must be a valid number.";
-				errR = () => new Random(0, Infinity);
-				expect(errR).toThrow(errorStr);
-			});
-			test("Accepts Number.MIN_SAFE_INTEGER and MAX_SAFE_INTEGER.", () => {
-				const r = new Random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-				expect(r.min).toBe(Number.MIN_SAFE_INTEGER);
-				expect(r.max).toBe(Number.MAX_SAFE_INTEGER);
-			});
-		});
-		describe("Runtime Type Safety for Constructor", () => {
-			test.todo("Throws if minimum is not a number.");
-			test.todo("Throws if maximum is not a number.");
-			test.todo("Throws if minimum is NaN.");
-			test.todo("Throws if maximum is Infinity.");
-			test.todo("Throws if minimum is -Infinity.");
 		});
 	});
 
@@ -137,12 +151,42 @@ describe("Random Number Generator", () => {
 		});
 	});
 	describe("Runtime Type Safety for Setters", () => {
-		test.todo("Throws if min is a string");
-		test.todo("Throws if max is a string");
-		test.todo("Throws if min is Infinity");
-		test.todo("Throws if max is -Infinity");
-		test.todo("Throws if min > max");
-		test.todo("Throws if max < min");
+		let errorMinNumStr: string;
+		let errorMaxNumStr: string;
+		beforeAll(() => {
+			errorMinNumStr = "Minimum must be a valid number.";
+			errorMaxNumStr = "Maximum must be a valid number.";
+		});
+		test("Throws if min is a string.", () => {
+			errorStr = errorMinNumStr;
+			errR = () => { random.min = "5" as any; };
+			expect(errR).toThrow(errorStr);
+		});
+		test("Throws if max is a string.", () => {
+			errorStr = errorMaxNumStr;
+			errR = () => { random.max = "15" as any; };
+			expect(errR).toThrow(errorStr);
+		});
+		test("Throws if min is Infinity.", () => {
+			errorStr = errorMinNumStr;
+			errR = () => { random.min = Infinity; };
+			expect(errR).toThrow(errorStr);
+		});
+		test("Throws if max is -Infinity.", () => {
+			errorStr = errorMaxNumStr;
+			errR = () => { random.max = -Infinity; };
+			expect(errR).toThrow(errorStr);
+		});
+		test("Throws if min > max.", () => {
+			errorStr = "Minimum cannot be greater than maximum.";
+			errR = () => { random.min = 15; };
+			expect(errR).toThrow(errorStr);
+		});
+		test("Throws if max < min.", () => {
+			errorStr = "Maximum cannot be less than minimum.";
+			errR = () => { random.max = -5; };
+			expect(errR).toThrow(errorStr);
+		});
 	});
 
 	describe("Random Value Generation", () => {
@@ -176,11 +220,30 @@ describe("Random Number Generator", () => {
 			val = random.zeroOrOne();
 			expect(zeroAndOne).toContain(val);
 		});
-		test.todo("randomInteger returns min when min == max.");
-		test.todo("randomInteger over narrow range returns consistent value.");
+		test("randomInteger returns min when min == max.", () => {
+			const minimumValue = 5;
+			random.min = minimumValue;
+			random.max = minimumValue;
+
+			const minimum = random.randomInteger();
+			expect(minimum).toBe(minimumValue);
+		});
+		test("randomInteger over narrow range returns consistent value.", () => {
+			const minimumValue = 3;
+			random.min = minimumValue;
+			random.max = minimumValue;
+			for(let i = 0; i < 100; i++) {
+				const minimum = random.randomInteger();
+				expect(minimum).toBe(minimumValue);
+			}
+		});
 	});
 
 	describe("Random Selection from Arrays", () => {
+		let result: number;
+		beforeEach(() => {
+			result = 0;
+		});
 		test("choice() selects an element from array.", () => {
 			const nums = range(2, 9, 2);
 			const result = random.choice(nums);
@@ -191,9 +254,23 @@ describe("Random Number Generator", () => {
 			errR = () => random.choice([]);
 			expect(errR).toThrow(errorStr);
 		});
-		test.todo("choice() works with one-element array.");
-		test.todo("choice() works with negative values.");
-		test.todo("choice() works with floats.");
+		test("choice() works with one-element array.", () => {
+			const value = 42;
+			const valueArr = [value];
+			const result = random.choice(valueArr);
+			expect(result).toBe(value);
+		});
+		test("choice() works with negative values.", () => {
+			const nums = [-5, -2, -1];
+			const result = random.choice(nums);
+			expect(nums).toContain(result);
+		});
+		test("choice() works with floats.", () => {
+			const nums = range(1, 4);
+			const scaledNums = nums.map(el => el / 10);
+			const result = random.choice(scaledNums);
+			expect(scaledNums).toContain(result);
+		});
 	});
 
 	describe("Static Method: populate()", () => {
@@ -238,7 +315,20 @@ describe("Random Number Generator", () => {
 			errR = () => Random.populate(0);
 			expect(errR).toThrow(errorStr);
 		});
-		test.todo("populate(1) returns single-element array.");
-		test.todo("Throws if frac = true and end = 0 (division by zero).");
+		test("populate(1) returns single-element array.", () => {
+			const n = 1;
+			const arr = Random.populate(n);
+			const arrLength = arr.length;
+			expect(arrLength).toBe(n);
+		});
+		test("Throws if frac = true and end = 0 (division by zero).", () => {
+			const n = 5;
+			const start = 0;
+			const end = 0;
+			const frac = true;
+			errR = () => Random.populate(n, start, end, frac);
+			errorStr = "Division by zero error or invalid range.";
+			expect(errR).toThrow(errorStr);
+		});
 	});
 });
