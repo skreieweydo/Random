@@ -1,4 +1,4 @@
-import { seqℕ } from "../../src/utils/index";
+import { seqℕ } from "./index";
 
 describe("seqℕ()", () => {
 	let genSeq: number[];

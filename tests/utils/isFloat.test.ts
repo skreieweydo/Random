@@ -1,4 +1,4 @@
-import { isFloat } from "../../src/utils/index";
+import { isFloat } from "./index";
 
 describe("isFloat()", () => {
 	let isNumFloat: boolean;

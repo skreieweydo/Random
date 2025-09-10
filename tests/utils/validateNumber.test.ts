@@ -1,4 +1,4 @@
-import { validateNumber } from "../../src/utils/index";
+import { validateNumber } from "./index";
 
 describe("validateNumber", () => {
 	let valObj: {

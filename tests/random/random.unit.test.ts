@@ -1,5 +1,5 @@
-import { Random } from "../../src/index";
-import { isFloat, seqℕ, range } from "../../src/utils/index";
+import { Random } from "../index";
+import { isFloat, seqℕ, range } from "../utils/index";
 
 describe("Random Number Generator", () => {
 	let random: Random;

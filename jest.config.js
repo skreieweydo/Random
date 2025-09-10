@@ -7,5 +7,5 @@ export default {
 	moduleFileExtensions: ['ts', 'tsx', 'js'],
 	collectCoverage: true,
 	coverageDirectory: 'coverage',
-	collectCoverageFrom: ['src/**/*.ts'],
+	collectCoverageFrom: ['tests/**/*.ts'],
 };

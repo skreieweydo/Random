@@ -1,4 +1,4 @@
-import { range } from "../../src/utils/index";
+import { range } from "./index";
 
 describe("range()", () => {
 	let genRange: number[];
