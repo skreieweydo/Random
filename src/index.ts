@@ -1,4 +1,4 @@
-import { validateNumber } from "./utils";
+import { validateNumber } from "./utils/index.js";
 
 /**
  * A lightweight wrapper around `Math.random()` that provides

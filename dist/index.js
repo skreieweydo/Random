@@ -1,4 +1,4 @@
-import { validateNumber } from "./utils";
+import { validateNumber } from "./utils/index.js";
 /**
  * A lightweight wrapper around `Math.random()` that provides
  * convenience methods for common random operations over a numeric range.
@@ -13,6 +13,9 @@ import { validateNumber } from "./utils";
  * const i = rng.randomInteger();  // 0 ≤ i < 10 (integer)
  */
 export class Random {
+    // "number" and "integer" functions returns are inclusive of max and min
+    minimum;
+    maximum;
     // Math.random(): [0, 1)
     // default: (0, 1)
     /**
