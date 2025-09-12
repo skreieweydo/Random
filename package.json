@@ -1,6 +1,6 @@
 {
 	"name": "@skreio/random",
-	"version": "1.0.1",
+	"version": "1.0.4",
 	"description": "Tiny random utilities for JS/TS (predictable errors, no mutation).",
 	"license": "MIT",
 	"repository": {
