@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.0.5] - 2025-10-23
+
+### Fixed
+- **Random.choice()**: corrected index range to `[0, length)` so the last element can be selected.
+- **tests**: fractional `populate()` now asserts values are in `[0, 1)`.
+
+### Tooling
+- **coverage**: Jest now emits `coverage-summary.json` and measures the intended files.
+- **status script**: coverage step parses summary (or computes from final), prints all four metrics, and enforces thresholds.
+
+### Docs
+- **README**: updated npm install scope and fixed CI badge URL; clarified half-open intervals `[min, max)`.
+
 ## [1.0.0] - 2025-08-26
 
 ### Highlights

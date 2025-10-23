@@ -2,9 +2,7 @@
 
 > A lightweight, validated wrapper around `Math.random()` with a clean API for bounded floats/ints, coin flips, array selection, and bulk generation.
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/skr eieweydo/Random/ci.yml?branch=main)](https://github.com/skr eieweydo/Random/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
+Note: all draws use half-open intervals `[min, max)` for floats and integers.
 ---
 
 ## Table of Contents
@@ -36,34 +34,23 @@ Runtime validation guards catch invalid inputs early.
 
 ## Installation
 
-Until this is published to npm, install directly from GitHub:
+```bash
+npm i @skreieweydo/random
+```
+
+Install from npm:
 
 ```bash
-# HTTPS
-npm i git+https://github.com/skreieweydo/Random.git
-
-# or SSH
-npm i git+ssh://git@github.com/skreieweydo/Random.git
-````
-
-> After publishing to npm, this becomes something like:
->
-> ```bash
-> npm i @skreieweydo/random
-> ```
->
-> (Update this section when published.)
-
+npm i @skreio/random
+```
 ---
 
 ## Quick Start
 
 ```ts
 // If consumed directly from the repo:
-import { Random } from "./src/Random";
-
-// …or once published to npm:
-// import { Random } from "@skreieweydo/random";
+import { Random, utils } from "@skreio/random";
+utils.range, utils.seqℕ, utils.isFloat, utils.validateNumber
 
 const rng = new Random(0, 10);
 

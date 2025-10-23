@@ -1,4 +1,4 @@
-import { validateNumber } from "./utils";
+import { validateNumber } from "./utils/index";
 
 /**
  * A lightweight wrapper around `Math.random()` that provides
@@ -14,7 +14,7 @@ import { validateNumber } from "./utils";
  * const i = rng.randomInteger();  // 0 ≤ i < 10 (integer)
  */
 export class Random {
-    // "number" and "integer" functions returns are inclusive of max and min
+    // All draws are half-open: floats & ints ∈ [min, max)
     private minimum: number;
     private maximum: number;
 
@@ -121,7 +121,7 @@ export class Random {
         if (nums.length === 0) {
             throw new Error("Array cannot be empty.");
         }
-		const indexGen = new Random(0, nums.length - 1);
+		const indexGen = new Random(0, nums.length);
         return nums[indexGen.randomInteger()];
 	}
 	// creates a new Random instance for each random number generated. This is inefficient. Instead, consider creating a single instance and reusing it.

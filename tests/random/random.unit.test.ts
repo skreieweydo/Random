@@ -271,6 +271,14 @@ describe("Random Number Generator", () => {
 			const result = random.choice(scaledNums);
 			expect(scaledNums).toContain(result);
 		});
+		// A small regression test to catch the off-by-one in choice():
+		test("choice() can select the last element", () => {
+			const nums = [10, 20, 30, 40];
+			const seen = new Set<number>();
+			for (let i = 0; i < 200; i++) seen.add(random.choice(nums));
+			const seenHas40 = seen.has(40);
+			expect(seenHas40).toBeTruthy();
+		});
 	});
 
 	describe("Static Method: populate()", () => {
@@ -299,15 +307,15 @@ describe("Random Number Generator", () => {
 				expect(val).toBeLessThanOrEqual(end);
 			});
 		});
-		test("Supports fractional mode with values in [0, 1].", () => {
+		test("Supports fractional mode with values in [0, 1).", () => {
 			n = 10;
 			range = { start: 0, end: 100 };
 			const { start, end } = range;
 			const isFractional = true;
 			arr = Random.populate(n, start, end, isFractional);
             arr.forEach(val => {
-                expect(val).toBeGreaterThanOrEqual(start);
-                expect(val).toBeLessThanOrEqual(end);
+				expect(val).toBeGreaterThanOrEqual(0);
+				expect(val).toBeLessThan(1);
             });
 		});
 		test("Throws error for zero or negative length.", () => {
